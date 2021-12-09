@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        li { list-style: none; }
+        .kind_wrap { 
+            border: 2px solid black;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .kind_wrap > .kind_slider {
+            overflow: hidden;
+        }
+        .kind_wrap > .kind_slider .slider {
+            /* border: 1px solid red; */
+            /* width: 2400px; */
+        }
+        .kind_wrap > .kind_slider .slider > li {
+            /* border: 1px solid red; */
+            float: left;
+            /* width: 800px; */
+        }
+        .kind_wrap > .kind_slider .slider > li img {
+            vertical-align: top;
+        }
+        .kind_wrap .arrow a.prev {
+            position: absolute;
+            left: -50px;
+            top: 100px;
+        }
+        .kind_wrap .arrow a.next {
+            position: absolute;
+            right: -50px;
+            top: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="kind_wrap">
+        <div class="kind_slider">
+            <ul class="slider">
+                <li><img src="https://via.placeholder.com/800x200.png?text=1" alt=""></li>
+                <li><img src="https://via.placeholder.com/800x200.png?text=2" alt=""></li>
+                <li><img src="https://via.placeholder.com/800x200.png?text=3" alt=""></li>
+            </ul>
+        </div>
+        
+        <div class="arrow">
+            <a href="" class="prev">이전</a>
+            <a href="" class="next">다음</a>
+        </div>
+    </div>
+    <script>
+        window.onload = function () {
+            const kindWrap = document.querySelector('.kind_wrap');
+            const slider = kindWrap.querySelector('.slider');
+            const slideLis = slider.querySelectorAll('li');
+            const moveButton = kindWrap.querySelector('.arrow');
+            const liWidth = slideLis[0].clientWidth;
+            const sliderWidth = liWidth * slideLis.length;
+            slider.style.width = sliderWidth + 'px';
+            console.log(liWidth)
+            let moveDist = 0;
+            let listIndex = 0;
+
+            moveButton.addEventListener('click', moveSlide);
+
+            function moveSlide(event) {
+                event.preventDefault();
+                console.log(event.target.className);
+                if (event.target.className === 'next') {
+                    if(listIndex !== slideLis.length-1) {
+                        moveDist += -liWidth;
+                        console.log(moveDist);
+                        position(moveDist, listIndex + 1);     
+                    }
+                } else {
+                    if(listIndex !== 0) {
+                        moveDist += liWidth;
+                        console.log(moveDist)
+                        position(moveDist, listIndex - 1); 
+                    }
+                }
+            }
+
+            function position(moveDist, num) { 
+                slideLis.forEach( function (li) {
+                    li.style.transform = `translateX(${moveDist}px)`;    
+                });   
+                listIndex = num; 
+            }
+        }
+        
+    </script>
+</body>
+</html>
