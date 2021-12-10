@@ -80,12 +80,21 @@
                         moveDist += -liWidth;
                         console.log(moveDist);
                         position(moveDist, listIndex + 1);     
+                    } else {
+                        slideLis.forEach( function (li) {
+                            moveDist = 0;
+                            position(moveDist, 0)
+                        });
                     }
                 } else {
                     if(listIndex !== 0) {
                         moveDist += liWidth;
                         console.log(moveDist)
                         position(moveDist, listIndex - 1); 
+                    } else {
+                        listIndex = slideLis.length - 1; 
+                        moveDist = - (liWidth * listIndex); 
+                        position(moveDist, listIndex);
                     }
                 }
             }
