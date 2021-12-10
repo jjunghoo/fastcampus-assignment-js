@@ -58,54 +58,72 @@
         </div>
     </div>
     <script>
-        window.onload = function () {
+        window.onload = function() {
             /* 돔 준비 */
             const kindWrap = document.querySelector('.kind_wrap');
             const slider = kindWrap.querySelector('.slider');
             const slideLis = slider.querySelectorAll('li');
             const moveButton = kindWrap.querySelector('.arrow');
-            let moveDist = 0;
-            let listIndex = 0;
-            let speedTime = 500;
-
-            /* 넓이 구하기 */
             const liWidth = slideLis[0].clientWidth;
-            const sliderWidth = liWidth * slideLis.length;
+            let moveDist = -liWidth;
+            let currentNum = 1;
+            let speedTime = 500;
+        
+            // 클론만들기
+            const cloneA = slideLis[0].cloneNode(true);
+            const cloneC = slideLis[slideLis.length - 1].cloneNode(true);
+            console.log(cloneA, cloneC);
+            slider.insertBefore(cloneC, slideLis[0]);
+            slider.appendChild(cloneA);
+        
+            /* 넓이 구하기 */
+            const slideCloneLis = slider.querySelectorAll('li');
+            const sliderWidth = liWidth * slideCloneLis.length;
             slider.style.width = sliderWidth + 'px';
-            slider.style.transition = `all ${speedTime}ms ease`;
-
+            slider.style.left = `${moveDist}px`;
+            
+            
             moveButton.addEventListener('click', moveSlide);
-
-            function moveSlide(event) {
-                event.preventDefault();
-                if (event.target.className === 'next') {
-                    if(listIndex !== slideLis.length-1) {
-                        moveDist += -liWidth;
-                        translate(moveDist, listIndex + 1);     
-                    } else {
-                        // return;
-                        moveDist = 0;
-                        translate(moveDist, 0)
+        
+            function moveSlide(ev) {
+                ev.preventDefault();
+                if (ev.target.className === 'next') {
+                    move(-1);
+                    if (currentNum === slideCloneLis.length - 1) {
+                        setTimeout(() => {
+                            slider.style.transition = 'none';
+                            moveDist = -liWidth;
+                            slider.style.left = `${-liWidth}px`;
+                            currentNum = 1;
+                            console.log(moveDist, currentNum)
+                        }, speedTime);
                     }
                 } else {
-                    if(listIndex !== 0) {
-                        moveDist += liWidth;
-                        translate(moveDist, listIndex - 1); 
-                    } else {
-                        // return;
-                        listIndex = slideLis.length - 1; 
-                        moveDist = - (liWidth * listIndex); 
-                        translate(moveDist, listIndex);
-                    }
+                    move(1);
+                    if (currentNum === 0) {
+                        setTimeout(() => {
+                            slider.style.transition = 'none';
+                            moveDist = -liWidth * (slideCloneLis.length - 2)
+                            slider.style.left = `${moveDist}px`;
+                            currentNum = slideCloneLis.length - 2;
+                            console.log(moveDist, currentNum)
+                        }, speedTime);
+                        
+                        // currentNum = slideLis.length - 1;
+                        // moveDist = -(liWidth * currentNum);
+                        // slider.style.left = `${moveDist}px`;
+                    } 
                 }
-            }
-
-            function translate(moveDist, num) { 
-                slider.style.transform = `translateX(${moveDist}px)`; 
-                listIndex = num; 
+                function move(direction) {
+                    currentNum += (-1 * direction)
+                    moveDist += liWidth * direction;
+                    slider.style.transition = `all ${speedTime}ms ease`;
+                    slider.style.left = `${moveDist}px`;
+                }
+        
+        
             }
         }
-        
     </script>
 </body>
 </html>

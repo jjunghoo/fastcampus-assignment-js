@@ -59,53 +59,69 @@
     </div>
     <script>
         window.onload = function () {
+            
             /* 돔 준비 */
             const kindWrap = document.querySelector('.kind_wrap');
             const slider = kindWrap.querySelector('.slider');
             const slideLis = slider.querySelectorAll('li');
             const moveButton = kindWrap.querySelector('.arrow');
-            let moveDist = 0;
-            let listIndex = 0;
+            const liWidth = slideLis[0].clientWidth;
+            let moveDist = -liWidth;
+            let listIndex = 1;
             let speedTime = 500;
+            
+            
+            /* 클론 만들기 */
+            const cloneA = slideLis[0].cloneNode(true);
+            const cloneC = slideLis[slideLis.length - 1].cloneNode(true);
+            slider.insertBefore(cloneC, slideLis[0]);
+            slider.appendChild(cloneA);
+    
 
             /* 넓이 구하기 */
-            const liWidth = slideLis[0].clientWidth;
-            const sliderWidth = liWidth * slideLis.length;
+            const sliderCloneLis = slider.querySelectorAll('li');
+            const sliderWidth = liWidth * sliderCloneLis.length;
             slider.style.width = sliderWidth + 'px';
-            slider.style.transition = `all ${speedTime}ms ease`;
+            slider.style.transform = `translateX(${moveDist}px)`;
+
+
 
             moveButton.addEventListener('click', moveSlide);
-
+            
             function moveSlide(event) {
                 event.preventDefault();
+                slider.style.transition = `all ${speedTime}ms ease`;
                 if (event.target.className === 'next') {
-                    if(listIndex !== slideLis.length-1) {
-                        moveDist += -liWidth;
-                        translate(moveDist, listIndex + 1);     
-                    } else {
-                        // return;
-                        moveDist = 0;
-                        translate(moveDist, 0)
+                    moveDist += -liWidth;  
+                    translate(moveDist, listIndex + 1);
+                    if(listIndex === sliderCloneLis.length-1) {
+                        setTimeout( () => {
+                            slider.style.transition = 'none';
+                            moveDist = -liWidth;
+                            translate(moveDist, 1);
+                        }, speedTime);
                     }
                 } else {
-                    if(listIndex !== 0) {
-                        moveDist += liWidth;
-                        translate(moveDist, listIndex - 1); 
-                    } else {
-                        // return;
-                        listIndex = slideLis.length - 1; 
-                        moveDist = - (liWidth * listIndex); 
-                        translate(moveDist, listIndex);
+                    moveDist += liWidth;
+                    translate(moveDist, listIndex - 1);
+                    if(listIndex === 0) {
+                        setTimeout( () => {
+                            slider.style.transition = 'none';
+                            moveDist = -liWidth * (sliderCloneLis.length - 2);
+                            slider.style.transform = `translsteX(${moveDist}px)`;
+                            listIndex = sliderCloneLis.length - 2;
+                            translate(moveDist, listIndex);
+                        }, speedTime);
                     }
                 }
             }
 
-            function translate(moveDist, num) { 
+            function translate(moveDist, num) {     
                 slider.style.transform = `translateX(${moveDist}px)`; 
-                listIndex = num; 
+                listIndex = num;
+                console.log(listIndex, moveDist); 
             }
         }
-        
     </script>
 </body>
 </html>
