@@ -5,123 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        * { margin: 0; padding: 0; }
-        li { list-style: none; }
-        .kind_wrap { 
-            border: 2px solid black;
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-        }
-        .kind_wrap > .kind_slider {
-            overflow: hidden;
-        }
-        .kind_wrap > .kind_slider .slider {
-            /* border: 1px solid red; */
-            /* width: 2400px; */
-        }
-        .kind_wrap > .kind_slider .slider > li {
-            /* border: 1px solid red; */
-            float: left;
-            /* width: 800px; */
-        }
-        .kind_wrap > .kind_slider .slider > li img {
-            vertical-align: top;
-        }
-        .kind_wrap .arrow a.prev {
-            position: absolute;
-            left: -50px;
-            top: 100px;
-        }
-        .kind_wrap .arrow a.next {
-            position: absolute;
-            right: -50px;
-            top: 100px;
-        }
-    </style>
+    <link rel="stylesheet" href="./clone_slide.css">
+    <script src="./clone_slider.js"></script>
 </head>
 <body>
-    <div class="kind_wrap">
-        <div class="kind_slider">
-            <ul class="slider">
-                <li><img src="https://via.placeholder.com/800x200.png?text=1" alt=""></li>
-                <li><img src="https://via.placeholder.com/800x200.png?text=2" alt=""></li>
-                <li><img src="https://via.placeholder.com/800x200.png?text=3" alt=""></li>
-            </ul>
-        </div>
+    <!-- <div class="kind_wrap">
+        <div class="kind_slider"> -->
+            <div class="slider">
+                <a href="" ><img src="https://via.placeholder.com/800x200.png?text=1" alt=""></a>
+                <a href="" ><img src="https://via.placeholder.com/800x200.png?text=2" alt=""></a>
+                <a href="" ><img src="https://via.placeholder.com/800x200.png?text=3" alt=""></a>
+            </div>
+        <!-- </div> -->
         
-        <div class="arrow">
+        <!-- <div class="arrow">
             <a href="" class="prev">이전</a>
             <a href="" class="next">다음</a>
-        </div>
+        </div> -->
     </div>
-    <script>
-        window.onload = function () {
-            
-            /* 돔 준비 */
-            const kindWrap = document.querySelector('.kind_wrap');
-            const slider = kindWrap.querySelector('.slider');
-            const slideLis = slider.querySelectorAll('li');
-            const moveButton = kindWrap.querySelector('.arrow');
-            const liWidth = slideLis[0].clientWidth;
-            let moveDist = -liWidth;
-            let listIndex = 1;
-            let speedTime = 500;
-            
-            
-            /* 클론 만들기 */
-            const cloneA = slideLis[0].cloneNode(true);
-            const cloneC = slideLis[slideLis.length - 1].cloneNode(true);
-            slider.insertBefore(cloneC, slideLis[0]);
-            slider.appendChild(cloneA);
-    
-
-            /* 넓이 구하기 */
-            const sliderCloneLis = slider.querySelectorAll('li');
-            const sliderWidth = liWidth * sliderCloneLis.length;
-            slider.style.width = sliderWidth + 'px';
-            slider.style.transform = `translateX(${moveDist}px)`;
-
-
-
-            moveButton.addEventListener('click', moveSlide);
-            
-            function moveSlide(event) {
-                event.preventDefault();
-                slider.style.transition = `all ${speedTime}ms ease`;
-                if (event.target.className === 'next') {
-                    moveDist += -liWidth;  
-                    translate(moveDist, listIndex + 1);
-                    if(listIndex === sliderCloneLis.length-1) {
-                        setTimeout( () => {
-                            slider.style.transition = 'none';
-                            moveDist = -liWidth;
-                            translate(moveDist, 1);
-                        }, speedTime);
-                    }
-                } else {
-                    moveDist += liWidth;
-                    translate(moveDist, listIndex - 1);
-                    if(listIndex === 0) {
-                        setTimeout( () => {
-                            slider.style.transition = 'none';
-                            moveDist = -liWidth * (sliderCloneLis.length - 2);
-                            slider.style.transform = `translsteX(${moveDist}px)`;
-                            listIndex = sliderCloneLis.length - 2;
-                            translate(moveDist, listIndex);
-                        }, speedTime);
-                    }
-                }
-            }
-
-            function translate(moveDist, num) {     
-                slider.style.transform = `translateX(${moveDist}px)`; 
-                listIndex = num;
-                console.log(listIndex, moveDist); 
-            }
-        }
+    <script>   
+        kSlider('.slider', {speed: 500});
     </script>
 </body>
 </html>
